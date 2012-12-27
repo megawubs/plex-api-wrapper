@@ -7,7 +7,10 @@ class Movie(object):
         self.key = element.attrib['key']
         self.type = 'movie'
         self.title = element.attrib['title']
-        self.year = int(element.attrib['year'])
+        if 'year' in element.attrib:
+            self.year = int(element.attrib['year'])
+        else:
+            self.year = 'unknown'
         self.summary = element.attrib['summary']
         self.viewed = ('viewCount' in element.attrib) and (element.attrib['viewCount'] == '1')
         self.offset = int(element.attrib['viewOffset']) if 'viewOffset' in element.attrib else 0
