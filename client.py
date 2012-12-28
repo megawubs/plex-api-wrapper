@@ -28,11 +28,15 @@ class Client(object):
             raise ValueError("command not valid.")
         
         
-    def playVideo(self, video, offset=0):
-        path = "http://%s:%d%s" % (self.server.address, self.server.port, video.key)
-        command = "/playMedia?key=%s&path=%s" % (video.key, path)
-        if offset:
-            command += "&viewOffset=%d" % offset
+    def playVideo(self, video, transcode = False, offset=0):
+        if transcode:
+            pass
+        else:
+            path = "http://%s:%d%s" % (self.server.address, self.server.port, video.key)
+            command = "/playMedia?key=%s&path=%s" % (video.key, path)
+            if offset:
+                command += "&viewOffset=%d" % offset
+
         self.runCommand(command)
     
         

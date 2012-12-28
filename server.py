@@ -1,13 +1,17 @@
 from library import Library
 from client import Client
 from media import Media
+import base64
 
 import urllib2
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import XML
 
 class Server(object):
-    
+    transcodeURL = '/video/:/transcode/segmented/start.m3u8?'
+    transcode_private = base64.b64decode('k3U6GLkZOoNIoSgjDshPErvqMIFdE0xMTx8kgsrhnC0=')
+    transcode_public = 'KQMIY6GATPC63AIMC4R2'
+
     def __init__(self, address, port=32400):
         # TODO: clean up address, remove http:// etc
         
@@ -16,6 +20,7 @@ class Server(object):
             address = address[:-1]
         self.address = address
         self.port = int(port)
+
         
         
     def execute(self, path):

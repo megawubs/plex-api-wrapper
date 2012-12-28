@@ -6,11 +6,13 @@ class Movie(object):
         self.server = server
         self.element = element
         # browse element and extract some information
-        self.key = element.attrib['key']
         self.type = 'movie'
         info = Info(self, server).info
         for k in info:
             setattr(self.__class__, k,  info[k])
+
+        if not hasattr(self.__class__, 'year'):
+            self.year = 0
     
     def __str__(self):
         return "<Movie: %s (%s)>" % (self.title, self.year)
