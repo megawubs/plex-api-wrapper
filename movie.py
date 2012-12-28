@@ -1,20 +1,16 @@
+from info import Info
+
 class Movie(object):
     
     def __init__(self, element, server):
         self.server = server
-        
+        self.element = element
         # browse element and extract some information
         self.key = element.attrib['key']
         self.type = 'movie'
-        self.title = element.attrib['title']
-        if 'year' in element.attrib:
-            self.year = int(element.attrib['year'])
-        else:
-            self.year = 'unknown'
-        self.summary = element.attrib['summary']
-        self.viewed = ('viewCount' in element.attrib) and (element.attrib['viewCount'] == '1')
-        self.offset = int(element.attrib['viewOffset']) if 'viewOffset' in element.attrib else 0
-        self.file = element.find('.Media/Part').attrib['file']
+        info = Info(self).info
+        for k in info:
+            setattr(self.__class__, k,  info[k])
     
     def __str__(self):
         return "<Movie: %s (%s)>" % (self.title, self.year)

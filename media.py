@@ -6,8 +6,11 @@ class Media(object):
 	def __init__(self, element, server):
 		self.element = element
 		self.server = server
+		
+		#get video
 		self.video = element.find('./Video')
 		self.type = self.video.attrib['type']
+
 
 	def getMediaObject(self):
 		if self.type == "episode":
@@ -18,5 +21,3 @@ class Media(object):
 			return media
 		else:
 			return False
-
-			
