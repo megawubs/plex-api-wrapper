@@ -1,5 +1,4 @@
 from server import Server
-from media import Media
 from pprint import pprint
 
 server = Server("192.168.1.201", 32400)
@@ -13,7 +12,7 @@ clients = server.clients
 
 teststr = "/library/metadata/6308/"
 media = server.getMedia(teststr)
-print media.type
+print media.scrobbleURL % (media.key)
 # if media:
 # 	print "playing %s type is %s" % (media.title, media.type)
 # client.playVideo(media)
