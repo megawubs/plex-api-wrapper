@@ -1,15 +1,18 @@
+import uuid, hmac, hashlib, base64, time
+
 class Info(object):
-	"""Get media info"""
-	def __init__(self, media):
+	"""Get info of media"""
+	def __init__(self, media, server):
 		self.str = '<Info Object Type: %s, Title: %s>'
 		element = media.element
 		mediaElement = element.find('.Media')
 		key = element.attrib['key']
 		self.media = media
+		self.server = server
 		self.info = {}
 		
 		self.info['key'] = key
-
+		self.info['ratingKey'] = element.attrib['ratingKey']
 		self.info['type'] = media.type
 		self.info['title'] = element.attrib['title']
 		self.info['summary'] = element.attrib['summary']
@@ -33,8 +36,40 @@ class Info(object):
 		
 		self.info['updateURL'] =  "progress?key=%s&identifier=com.plexapp.plugins.library&time=%s&state=playing"
 	 	self.info['scrobbleURL'] = "scrobble?key=%s&identifier=com.plexapp.plugins.library"
+	 	self.info['transcodeURL'] = self.getTranscodeURL()
         
-	
+	def getTranscodeURL(self, extension='mkv', format='matroska', videoCodec='libx264', audioCodec=None, continuePlay=False, continueTime=None, videoWidth='1280', videoHeight='720', videoBitrate=None):
+		if(videoWidth > self.info['width']):
+			videoWidth = self.info['width']
+
+		if(videoHeight > self.info['height']):
+			videoHeight = self.info['height']
+
+		self.session = uuid.uuid4()
+
+		args = dict()
+		args['offset'] = 0
+		args['3g'] = 0
+		args['subtitleSize'] = 125
+		args['secondsPerSegment'] = 10
+		args['ratingKey'] = self.info['ratingKey']
+		args['key'] =  self.info['key']
+		args["identifier"] = "com.plexapp.plugins.library"
+		args["quality"] = 7
+		args["url"] = self.fileURL
+		transcodeURL = self.transcodeURL
+		transcodeURL += urlencode(args)
+		atime = int(time.time())
+		message = transcodeURL + "@%d" % atime
+		sig = base64.b64encode(hmac.new(PlexInterface.transcode_private, msg=message, digestmod=hashlib.sha256).digest())
+		plexAccess = dict()
+		plexAccess['X-Plex-Access-Key'] = PlexInterface.transcode_public
+		plexAccess['X-Plex-Access-Time'] = atime
+		plexAccess['X-Plex-Access-Code'] = sig
+		plexAccess['X-Plex-Client-Capabilities'] = 'protocols=http-live-streaming,http-mp4-streaming,http-mp4-video,http-mp4-video-720p,http-streaming-video,http-streaming-video-720p;videoDecoders=h264{profile:high&resolution:1080&level:41};audioDecoders=aac,mp3,ac3,dts'
+		transcodeURL = self.transcodeBaseURL + transcodeURL + "&" + urlencode(plexAccess)
+		return transcodeURL
+
 	def __str__(self):
 		return self.str % (self.info['type'], self.info['title'])
 
