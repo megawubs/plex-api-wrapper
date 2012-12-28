@@ -1,5 +1,6 @@
 from library import Library
 from client import Client
+from media import Media
 
 import urllib2
 import xml.etree.ElementTree as ET
@@ -50,6 +51,10 @@ class Server(object):
     def __repr__(self):
         return "<Server: %s:%d/>" % (self.address, self.port) 
     
+    def getMedia(self, mediaPath):
+        result = self.query(mediaPath)
+        media = Media(result, self)
+        return media.getMediaObject()
     
     @property
     def library(self):
