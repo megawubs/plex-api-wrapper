@@ -12,7 +12,7 @@ clients = server.clients
 
 teststr = "/library/metadata/6308/"
 media = server.getMedia(teststr)
-print media.scrobbleURL % (media.key)
+print media.transcodeURL
 # if media:
 # 	print "playing %s type is %s" % (media.title, media.type)
 # client.playVideo(media)

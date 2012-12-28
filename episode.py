@@ -7,7 +7,7 @@ class Episode(object):
         self.server = server
         self.element = element
         self.type = "episode"
-        info = Info(self).info
+        info = Info(self, server).info
         for k in info:
             setattr(self.__class__, k,  info[k])
         # self.transcodeBaseURL = parsed_path.scheme + "://" + parsed_path.netloc

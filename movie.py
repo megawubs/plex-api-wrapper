@@ -8,7 +8,7 @@ class Movie(object):
         # browse element and extract some information
         self.key = element.attrib['key']
         self.type = 'movie'
-        info = Info(self).info
+        info = Info(self, server).info
         for k in info:
             setattr(self.__class__, k,  info[k])
     
