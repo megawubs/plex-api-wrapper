@@ -2,7 +2,7 @@ from section import Section
 from episode import Episode
 from show import Show
 from movie import Movie
-
+import re
 
 class Library(object):
     def __init__(self, server):
@@ -38,7 +38,8 @@ class Library(object):
 
 
     def findAll(self, name, type=None):
-        query = "/search?query=%s" % name
+        query = '/search?type=1&query=%s' % name
+        print query
         element = self.server.query(query)
         
         items = []
